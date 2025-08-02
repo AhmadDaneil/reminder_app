@@ -21,13 +21,35 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settings = Provider.of<SettingsProvider>(context);
-
-    return MaterialApp(
+    return Consumer<SettingsProvider>(
+      builder: (context, settings, _){
+        return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: settings.isDarkmode ? Brightness.dark : Brightness.light,
-        textTheme: _getTextTheme(settings.fontSize),
+        scaffoldBackgroundColor: settings.backgroundColor,
+        textTheme: _getTextTheme(settings.fontSize).apply(bodyColor: settings.fontColor,
+        displayColor: settings.fontColor,
+        ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: settings.backgroundColor,
+          iconTheme: IconThemeData(color: settings.fontColor),
+          titleTextStyle: TextStyle(
+            color: settings.fontColor,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        iconTheme: IconThemeData(color: settings.fontColor),
+        inputDecorationTheme: InputDecorationTheme(
+          labelStyle: TextStyle(color: settings.fontColor),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: settings.fontColor),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: settings.fontColor),
+          ),
+        ),
       ),
       initialRoute: '/',
       routes: {
@@ -39,6 +61,9 @@ class MyApp extends StatelessWidget {
       },
     );
   }
+    );
+      }
+    
   TextTheme _getTextTheme(String size) {
         switch (size) {
           case 'Small':

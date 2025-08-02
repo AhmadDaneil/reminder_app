@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
         child: Text(
           'No Reminders Yet',
           textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0, color: Colors.black54),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0, color: Theme.of(context).textTheme.bodyMedium!.color),
           ),
         ),
         floatingActionButton: FloatingActionButton(

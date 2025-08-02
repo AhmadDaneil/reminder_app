@@ -52,7 +52,7 @@ class _AddReminderState extends State<AddReminder> {
           children: [
             TextField(
               controller: _titleController,
-              decoration: const InputDecoration(labelText: 'title'),
+              decoration: const InputDecoration(labelText: 'Title'),
             ),
             const SizedBox(height: 10),
             TextField(
