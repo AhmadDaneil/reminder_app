@@ -49,8 +49,15 @@ class SettingsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        backgroundColor: settings.appBarColor,
+        title: Text(
+          'Settings',
+          style: TextStyle(
+            color: settings.fontColor
+          ),
+          ),
         centerTitle: true,
+        iconTheme: IconThemeData(color: settings.fontColor),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -59,12 +66,12 @@ class SettingsPage extends StatelessWidget {
             Text('App Settings', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color:Theme.of(context).textTheme.bodyMedium!.color)),
             SwitchListTile(
               value: settings.isDarkmode, 
-              onChanged: (val) => settings.toggleDarkMode,
-              title: const Text('Dark Mode'),
+              onChanged: (val) => settings.toggleDarkMode(),
+              title: Text('Dark Mode', style: TextStyle(color:Theme.of(context).textTheme.bodyMedium!.color)),
               ),
               DropdownButtonFormField<String>(
                 value: settings.fontSize,
-                items: ['Small', 'Medium', 'Large'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(), 
+                items: ['Small', 'Medium', 'Large'].map((e) => DropdownMenuItem(value: e, child: Text(e, style: TextStyle(color:Theme.of(context).textTheme.bodyMedium!.color)))).toList(), 
                 onChanged: (val) {
                   if (val != null) settings.setFontSize(val);
                 },
@@ -83,6 +90,13 @@ class SettingsPage extends StatelessWidget {
               );
             },
             child: const Text('Choose Font Color'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(onPressed: () {
+              _showColorPicker(context, initialColor: settings.appBarColor, onColorSelected: settings.setAppBarColor, title: 'Select title Color',
+              );
+            },
+            child: const Text('Choose Title Color'),
             ),
           ],
         ),

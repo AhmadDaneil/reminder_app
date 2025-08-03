@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:reminder_app/services/settings_provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -10,8 +12,11 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<SettingsProvider>(context);
+    
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: settings.appBarColor,
         title: const Text('Home'),
         centerTitle: true,
       ),
@@ -43,10 +48,10 @@ class _HomeState extends State<Home> {
                 },
               ),
               ListTile(
-                title: const Text('Reminders list'),
+                title: const Text('Notes'),
                 onTap:() async{
                   Navigator.pop(context);
-                  Navigator.pushNamed(context, '/reminder_list');
+                  Navigator.pushNamed(context, '/notes');
                   setState(() {});
                 },
               ),

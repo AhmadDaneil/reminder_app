@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:reminder_app/services/settings_provider.dart';
 
 class AddReminder extends StatefulWidget {
   const AddReminder({super.key});
@@ -16,6 +18,7 @@ class _AddReminderState extends State<AddReminder> {
   String? _repeat = 'None';
 
   Future<void> _pickDate() async{
+    
     final picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -40,8 +43,12 @@ class _AddReminderState extends State<AddReminder> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<SettingsProvider>(context);
+    final textColor = settings.fontColor;
+
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: settings.appBarColor,
         title: const Text('Add Reminder'),
         centerTitle: true,
       ),
@@ -62,25 +69,35 @@ class _AddReminderState extends State<AddReminder> {
             ),
             const SizedBox(height: 20),
             ListTile(
-              leading: const Icon(Icons.calendar_today),
+              leading: Icon(Icons.calendar_today, color: textColor),
               title: Text(_selectedDate == null
-              ? 'Select Date' : '${_selectedDate!.toLocal()}'.split(' ')[0]),
+              ? 'Select Date' : '${_selectedDate!.toLocal()}'.split(' ')[0],
+              style: TextStyle(color: textColor),
+              ),
               onTap: _pickDate,
               ),
               ListTile(
-              leading: const Icon(Icons.access_time),
+              leading: Icon(Icons.access_time, color: textColor),
               title: Text(_selectedTime == null
-              ? 'Select Time' : _selectedTime!.format(context)),
+              ? 'Select Time' : _selectedTime!.format(context),
+              style: TextStyle(color: textColor),
+              ),
               onTap: _pickTime,
               ),
               const SizedBox(height: 10),
               DropdownButtonFormField<String>(
                 value: _repeat,
                 items: ['None', 'Daily', 'Weekly', 'Monthly']
-                .map((value) => DropdownMenuItem(value: value, child: Text(value)))
+                .map((value) => DropdownMenuItem(value: value, child: Text(value, style: TextStyle(color: textColor))
+                )
+                )
                 .toList(),
                 onChanged: (val) => setState(() => _repeat = val!),
-                decoration: const InputDecoration(labelText: 'Repeat'),
+                decoration: InputDecoration(labelText: 'Repeat', labelStyle: TextStyle(color: textColor),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: textColor),
+                )
+                ),
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton.icon(

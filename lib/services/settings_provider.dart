@@ -6,12 +6,14 @@ class SettingsProvider with ChangeNotifier{
 
   Color _backgroundColor = LightDarkColors.lightBackground;
   Color _fontColor = LightDarkColors.lightFont;
+  Color _appBarColor = Colors.white;
 
   bool get isDarkmode => _isDarkmode;
   String get fontSize => _fontSize;
 
   Color get backgroundColor => _backgroundColor;
   Color get fontColor => _fontColor;
+  Color get appBarColor => _appBarColor;
 
   void toggleDarkMode () {
     _isDarkmode = !_isDarkmode;
@@ -30,6 +32,11 @@ class SettingsProvider with ChangeNotifier{
 
   void setFontColor (Color color){
     _fontColor = color;
+    notifyListeners();
+  }
+
+  void setAppBarColor(Color color){
+    _appBarColor = color;
     notifyListeners();
   }
 }

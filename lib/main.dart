@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:reminder_app/screens/add_notes.dart';
 import 'package:reminder_app/screens/add_reminder.dart';
-import 'package:reminder_app/screens/reminder_list.dart';
+import 'package:reminder_app/screens/notes.dart';
 import 'package:reminder_app/screens/loading.dart';
 import 'package:reminder_app/screens/home.dart';
 import 'package:reminder_app/screens/settings.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
         displayColor: settings.fontColor,
         ),
         appBarTheme: AppBarTheme(
-          backgroundColor: settings.backgroundColor,
+          backgroundColor: settings.appBarColor,
           iconTheme: IconThemeData(color: settings.fontColor),
           titleTextStyle: TextStyle(
             color: settings.fontColor,
@@ -55,7 +56,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const Loading(),
         '/home': (context) => const Home(),
-        '/reminder_list': (context) => const ReminderList(),
+        '/notes': (context) => const Notes(),
+        '/add_notes': (context) => AddNotes(),
         '/add_reminder': (context) => const AddReminder(),
         '/settings': (context) => const SettingsPage(),
       },
