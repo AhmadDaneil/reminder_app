@@ -15,6 +15,15 @@ class SettingsProvider with ChangeNotifier{
   Color get fontColor => _fontColor;
   Color get appBarColor => _appBarColor;
 
+  double get fontSizeValue {
+    switch(_fontSize){
+      case 'Small': return 12.0;
+      case 'Large': return 20.0;
+      case 'Medium': return 16.0;
+      default : return 14.0;
+    }
+  }
+
   void toggleDarkMode () {
     _isDarkmode = !_isDarkmode;
     notifyListeners();

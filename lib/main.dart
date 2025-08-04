@@ -67,14 +67,34 @@ class MyApp extends StatelessWidget {
       }
     
   TextTheme _getTextTheme(String size) {
+    double fontSize;
         switch (size) {
           case 'Small':
-            return const TextTheme(bodyMedium: TextStyle(fontSize: 14));
+            fontSize= 12.0;
+            break;
           case 'Large':
-            return const TextTheme(bodyMedium: TextStyle(fontSize: 20));
+            fontSize = 20.0;
+            break;
+          case 'Medium':
+            fontSize = 16.0;
+            break;
           default:
-            return const TextTheme(bodyMedium: TextStyle(fontSize: 16));
+            fontSize = 14.0;
         }
-      }
+    return TextTheme(
+    bodySmall: TextStyle(fontSize: fontSize),
+    bodyMedium: TextStyle(fontSize: fontSize),
+    bodyLarge: TextStyle(fontSize: fontSize),
+    titleSmall: TextStyle(fontSize: fontSize),
+    titleMedium: TextStyle(fontSize: fontSize),
+    titleLarge: TextStyle(fontSize: fontSize),
+    labelSmall: TextStyle(fontSize: fontSize),
+    labelMedium: TextStyle(fontSize: fontSize),
+    labelLarge: TextStyle(fontSize: fontSize),
+    headlineSmall: TextStyle(fontSize: fontSize),
+    headlineMedium: TextStyle(fontSize: fontSize),
+    headlineLarge: TextStyle(fontSize: fontSize),
+  );
+  }
 }
 

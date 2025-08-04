@@ -32,9 +32,9 @@ class _HomeState extends State<Home> {
             Navigator.pushNamed(context, '/add_reminder');
             setState(() {});
           },
-          backgroundColor: Colors.white,
+          backgroundColor: settings.isDarkmode ?Colors.grey[850] : Colors.grey,
           elevation: 8.0,
-          child: const Icon(Icons.add, color: Colors.black,),
+          child: Icon(Icons.add, color: settings.fontColor),
         ),
         drawer: Drawer(
           child: ListView(

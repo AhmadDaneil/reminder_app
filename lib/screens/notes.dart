@@ -38,8 +38,6 @@ class _NotesState extends State<Notes> {
                 prefixIcon: Icon(Icons.search, color: textColor),
                 hintText: 'Search Notes...',
                 hintStyle: TextStyle(color: textColor),
-                filled: true,
-                fillColor: settings.isDarkmode? Colors.grey[850]: Colors.white54,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12)
                 ),
@@ -52,7 +50,7 @@ class _NotesState extends State<Notes> {
                 itemCount: 10,
                 itemBuilder: (context, index) {
                   return Card(
-                    color: settings.isDarkmode ? Colors.grey[850] : Colors.white54,
+                    color: settings.isDarkmode ? Colors.grey[850] : Colors.grey,
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     child: ListTile(
                       title: Text(

@@ -71,11 +71,26 @@ class SettingsPage extends StatelessWidget {
               ),
               DropdownButtonFormField<String>(
                 value: settings.fontSize,
-                items: ['Small', 'Medium', 'Large'].map((e) => DropdownMenuItem(value: e, child: Text(e, style: TextStyle(color:Theme.of(context).textTheme.bodyMedium!.color)))).toList(), 
+                items: ['Small', 'Default', 'Medium', 'Large'].map((e) => DropdownMenuItem(value: e, child: Text(e, style: TextStyle(color: settings.fontColor, fontWeight: FontWeight.bold,
+                ),
+                ),
+                ))
+                .toList(), 
                 onChanged: (val) {
                   if (val != null) settings.setFontSize(val);
                 },
-                decoration: const InputDecoration(labelText: 'Font Size'),
+                dropdownColor: settings.isDarkmode ? Colors.grey[850] : Colors.grey,
+                style: TextStyle(color: settings.fontColor),
+                decoration: InputDecoration(
+                  labelText: 'Font Size',
+                  labelStyle: TextStyle(color: settings.fontColor),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: settings.fontColor)
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: settings.fontColor)
+                  )
+                  ),
               ),
             const SizedBox(height: 20),
             ElevatedButton(onPressed: () {

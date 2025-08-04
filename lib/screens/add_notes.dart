@@ -38,8 +38,6 @@ class AddNotes extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: 'Title',
                 hintStyle: TextStyle(color: settings.fontColor),
-                filled: true,
-                fillColor: settings.isDarkmode? Colors.grey[850]: Colors.white54,
                 border: InputBorder.none,
               ),
             ),
@@ -55,8 +53,6 @@ class AddNotes extends StatelessWidget {
                   hintStyle: TextStyle(
                     color: settings.fontColor
                   ),
-                  filled: true,
-                  fillColor: settings.isDarkmode? Colors.grey[850]: Colors.white54,
                   border: InputBorder.none,
                 ),
               ),
