@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reminder_app/services/settings_provider.dart';
+import 'package:reminder_app/services/note_model.dart';
+import 'package:reminder_app/services/database_helper.dart';
 
 class AddNotes extends StatelessWidget {
   const AddNotes({super.key});
@@ -58,8 +60,20 @@ class AddNotes extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               ElevatedButton.icon(
-                onPressed: (){
+                onPressed: () async {
+                  print("Saving note...");
+                  print("Title: ${titleController.text}");
+                  print("Content: $contentController.text");
 
+                  Note note = Note(
+                    title: titleController.text,
+                    content: contentController.text,
+                    createdAt: DateTime.now().toIso8601String(),
+                  );
+
+                  await DatabaseHelper().insertNote(note);
+                  print("Note saved: ${note.title}");
+                  Navigator.pop(context, true);
                 }, 
               icon: const Icon(Icons.save),
               label: const Text("Save Note"),

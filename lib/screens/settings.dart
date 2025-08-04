@@ -79,7 +79,7 @@ class SettingsPage extends StatelessWidget {
                 onChanged: (val) {
                   if (val != null) settings.setFontSize(val);
                 },
-                dropdownColor: settings.isDarkmode ? Colors.grey[850] : Colors.grey,
+                dropdownColor: settings.backgroundColor,
                 style: TextStyle(color: settings.fontColor),
                 decoration: InputDecoration(
                   labelText: 'Font Size',

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reminder_app/services/settings_provider.dart';
+import 'package:reminder_app/services/database_helper.dart';
+import 'package:reminder_app/services/note_model.dart';
 
 class Notes extends StatefulWidget {
   const Notes({super.key});
@@ -10,6 +12,24 @@ class Notes extends StatefulWidget {
 }
 
 class _NotesState extends State<Notes> {
+  List<Note> notes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadNotes();
+  }
+
+  Future<void> _loadNotes() async{
+    final data = await DatabaseHelper().getNotes();
+    for (var note in data) {
+      print("Note: ${note.title}, ${note.content}, ${note.createdAt}");
+    }
+    setState(() {
+      notes = data;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsProvider>(context);
@@ -47,18 +67,18 @@ class _NotesState extends State<Notes> {
 
             Expanded(
               child: ListView.builder(
-                itemCount: 10,
+                itemCount: notes.length,
                 itemBuilder: (context, index) {
                   return Card(
                     color: settings.isDarkmode ? Colors.grey[850] : Colors.grey,
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     child: ListTile(
                       title: Text(
-                        'Note Title $index',
+                        notes[index].title,
                         style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
-                        'This is short preview',
+                        notes[index].content,
                         style: TextStyle(
                           color: textColor,
                         ),
@@ -78,9 +98,11 @@ class _NotesState extends State<Notes> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          Navigator.pushNamed(context, '/add_notes');
-            setState(() {});
+        onPressed: () async{
+          final result = await Navigator.pushNamed(context, '/add_notes');
+          if (result == true){
+            _loadNotes();
+          }
         },
         backgroundColor: settings.appBarColor,
         child: Icon(Icons.add, color: settings.fontColor),
