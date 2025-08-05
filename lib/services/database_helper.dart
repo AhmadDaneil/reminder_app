@@ -98,4 +98,15 @@ class DatabaseHelper {
     final db = await database;
     return await db.delete('notes' , where: 'id = ?' , whereArgs: [id]);
   }
+
+  Future<int> updateReminder(Reminder updated) async {
+    final db = await database;
+
+    return await db.update(
+      'reminders',
+      updated.toMap(),
+      where: 'id=?',
+      whereArgs: [updated.id],
+    );
+  }
 }

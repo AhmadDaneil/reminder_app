@@ -19,12 +19,55 @@ class _HomeState extends State<Home> {
     super.initState();
     _loadReminders();
   }
+  
 
   Future<void> _loadReminders() async{
     final data = await DatabaseHelper().getReminders();
     setState(() {
       reminders = data;
     });
+  }
+
+  void _showReminderDialog(Reminder reminder) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(reminder.title),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (reminder.content.isNotEmpty)
+            Text('Notes: ${reminder.content}'),
+          const SizedBox(height: 8),
+          Text('DateTime: ${reminder.content}'),
+          Text('Repeat: ${reminder.repeat}'),
+          ],
+          ),
+          actions: [
+            TextButton(onPressed: (){
+              Navigator.pop(context);
+            }, 
+            child: const Text('Back'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+
+                final result = await Navigator.pushNamed(
+                  context,
+                  '/add_reminder',
+                  arguments: reminder,
+                );
+                if (result == true) {
+                  _loadReminders();
+                }
+              }, 
+              child: Text('Edit'),
+              ),
+          ],
+      )
+      );
   }
 
   Future<void> _deleteReminder(Reminder reminder) async{
@@ -83,6 +126,7 @@ class _HomeState extends State<Home> {
                 _deleteReminder(reminder);
               },
               child: Card(
+              elevation: 10.0,
               color: settings.isDarkmode ? Colors.grey[900] : Colors.white,
               margin: const EdgeInsets.symmetric(vertical: 8.0),
               child: ListTile(
@@ -112,20 +156,26 @@ class _HomeState extends State<Home> {
                 _deleteReminder(reminder);
               }
               ),
+              onTap: () {
+                _showReminderDialog(reminders[index]);
+              },
               ),
             ),
               );
           },
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: (){
-            Navigator.pushNamed(context, '/add_reminder');
+          onPressed: () async {
+            final result = await Navigator.pushNamed(context, '/add_reminder');
+            if (result == true){
             _loadReminders();
+            }
           },
           backgroundColor: settings.isDarkmode ?Colors.grey[850] : Colors.grey,
           elevation: 30.0,
           child: Icon(Icons.add, color: settings.fontColor),
         ),
+
         drawer: Drawer(
           child: ListView(
             children: [

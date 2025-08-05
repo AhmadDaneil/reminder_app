@@ -15,6 +15,20 @@ class _AddReminderState extends State<AddReminder> {
   final _titleController = TextEditingController();
   final _notesController = TextEditingController();
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final Reminder? reminder = ModalRoute.of(context)?.settings.arguments as Reminder?;
+    if (reminder != null && _titleController.text.isEmpty) {
+      _titleController.text = reminder.title;
+      _notesController.text = reminder.content;
+      _selectedDate = DateTime.parse(reminder.dateTime);
+      _selectedTime = TimeOfDay.fromDateTime(_selectedDate!);
+      _repeat = reminder.repeat;
+    }
+  }
+
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   String _repeat = 'None';
@@ -60,8 +74,21 @@ class _AddReminderState extends State<AddReminder> {
       repeat: _repeat,
     );
 
-    await DatabaseHelper().insertReminder(reminder);
-    Navigator.pop(context);
+    final existing = ModalRoute.of(context)?.settings.arguments as Reminder?;
+    if (existing != null && existing.id != null) {
+      final updated = Reminder(
+        id: existing.id,
+        title: reminder.title,
+        content: reminder.content,
+        dateTime: reminder.dateTime,
+        repeat: reminder.repeat,
+      );
+      await DatabaseHelper().updateReminder(updated);
+    } else {
+      await DatabaseHelper().insertReminder(reminder);
+    }
+    
+    Navigator.pop(context, true);
   }
 
   @override
