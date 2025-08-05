@@ -72,7 +72,6 @@ class AddNotes extends StatelessWidget {
                   );
 
                   await DatabaseHelper().insertNote(note);
-                  print("Note saved: ${note.title}");
                   Navigator.pop(context, true);
                 }, 
               icon: const Icon(Icons.save),

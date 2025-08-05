@@ -30,6 +30,11 @@ class _NotesState extends State<Notes> {
     });
   }
 
+  Future<void> _deleteNote(int id) async{
+    await DatabaseHelper().deleteNote(id);
+    _loadNotes();
+  }
+
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsProvider>(context);
@@ -69,7 +74,24 @@ class _NotesState extends State<Notes> {
               child: ListView.builder(
                 itemCount: notes.length,
                 itemBuilder: (context, index) {
-                  return Card(
+                  final note = notes[index];
+
+                  return Dismissible(
+                    key: Key(note.id.toString()),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (direction) async {
+                      await _deleteNote(note.id!);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Note deleted")),
+                      );
+                    }, 
+                    background: Container(
+                      color: Colors.red,
+                      alignment: Alignment.centerRight,
+                      padding: EdgeInsets.only(right: 20),
+                      child: Icon(Icons.delete, color: Colors.white),
+                    ),
+                    child: Card(
                     color: settings.isDarkmode ? Colors.grey[850] : Colors.grey,
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     child: ListTile(
@@ -90,12 +112,13 @@ class _NotesState extends State<Notes> {
                         
                       },
                     ),
+                    ),
                   );
                 }
-                )
               ),
-          ],
-        ),
+            ),
+          ]
+        )
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async{
