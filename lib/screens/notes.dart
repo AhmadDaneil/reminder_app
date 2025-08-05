@@ -30,9 +30,20 @@ class _NotesState extends State<Notes> {
     });
   }
 
-  Future<void> _deleteNote(int id) async{
-    await DatabaseHelper().deleteNote(id);
+  Future<void> _deleteNote(Note note) async{
+    await DatabaseHelper().deleteNote(note.id!);
     _loadNotes();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('${note.title} deleted'),
+      action: SnackBarAction(label: 'Undo', 
+      onPressed: () async {
+        await DatabaseHelper().insertNote(note);
+        _loadNotes();
+      }
+      ),
+      )
+      );
   }
 
   @override
@@ -80,10 +91,7 @@ class _NotesState extends State<Notes> {
                     key: Key(note.id.toString()),
                     direction: DismissDirection.endToStart,
                     onDismissed: (direction) async {
-                      await _deleteNote(note.id!);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Note deleted")),
-                      );
+                      await _deleteNote(note);
                     }, 
                     background: Container(
                       color: Colors.red,
@@ -107,12 +115,14 @@ class _NotesState extends State<Notes> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       ),
-                      trailing: Icon(Icons.arrow_forward_ios, color: textColor),
-                      onTap: () {
-                        
+                      trailing: IconButton(icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        _deleteNote(note);
                       },
                     ),
+                    onTap: (){},
                     ),
+                    )
                   );
                 }
               ),

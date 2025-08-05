@@ -27,6 +27,22 @@ class _HomeState extends State<Home> {
     });
   }
 
+  Future<void> _deleteReminder(Reminder reminder) async{
+    await DatabaseHelper().deleteReminder(reminder.id!);
+    _loadReminders();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('${reminder.title} deleted'),
+      action: SnackBarAction(label: 'Undo', 
+      onPressed: () async {
+        await DatabaseHelper().insertReminder(reminder);
+        _loadReminders();
+      }
+      ),
+      )
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
     final settings = Provider.of<SettingsProvider>(context);
@@ -48,7 +64,25 @@ class _HomeState extends State<Home> {
           itemCount: reminders.length,
           itemBuilder: (context, index){
             final reminder = reminders[index];
-            return Card(
+            
+            return Dismissible(
+              key: Key(reminder.id.toString()),
+              background: Container(
+                color: Colors.red,
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: const Icon(Icons.delete, color: Colors.white),
+              ), 
+              secondaryBackground: Container(
+                color: Colors.red,
+                alignment: Alignment.centerRight,
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: const Icon(Icons.delete, color: Colors.white),
+              ),
+              onDismissed: (direction) {
+                _deleteReminder(reminder);
+              },
+              child: Card(
               color: settings.isDarkmode ? Colors.grey[900] : Colors.white,
               margin: const EdgeInsets.symmetric(vertical: 8.0),
               child: ListTile(
@@ -72,9 +106,15 @@ class _HomeState extends State<Home> {
                     style: TextStyle(fontSize: 12, color: settings.fontColor),
                   )
                 ],
-              )
               ),
-            );
+              trailing: IconButton(icon: const Icon(Icons.delete, color: Colors.red),
+              onPressed: () {
+                _deleteReminder(reminder);
+              }
+              ),
+              ),
+            ),
+              );
           },
         ),
         floatingActionButton: FloatingActionButton(
