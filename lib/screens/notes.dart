@@ -30,6 +30,75 @@ class _NotesState extends State<Notes> {
     });
   }
 
+  void _showEditDialog(Note note) {
+    final settings = Provider.of<SettingsProvider>(context, listen:false);
+    final titleController = TextEditingController(text: note.title);
+    final contentController = TextEditingController(text: note.content);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: settings.isDarkmode ? Colors.black : Colors.white,
+          title: Text(
+            'Edit Note',
+            style: TextStyle(color: settings.isDarkmode ? Colors.white : Colors.black),
+            ),
+          content: SingleChildScrollView(
+            child: Column(children: [
+              TextField(
+                controller: titleController,
+                decoration: InputDecoration(labelText: 'Title', labelStyle: TextStyle(color: settings.isDarkmode ? Colors.white : Colors.black),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: settings.isDarkmode ? Colors.white : Colors.black),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: settings.isDarkmode ? Colors.white : Colors.black),
+                ),
+                ),
+              ),
+              TextField(
+                controller: contentController,
+                decoration: InputDecoration(labelText: 'Content', labelStyle: TextStyle(color: settings.isDarkmode ? Colors.white : Colors.black),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: settings.isDarkmode ? Colors.white : Colors.black),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: settings.isDarkmode ? Colors.white : Colors.black),
+                ),
+                ),
+                maxLines: 1,
+                style: TextStyle(color: settings.isDarkmode ? Colors.white : Colors.black),
+              ),
+            ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Cancel', style: TextStyle(color: settings.isDarkmode ? Colors.white : Colors.black)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: settings.appBarColor, foregroundColor: settings.isDarkmode ? Colors.white : Colors.black),
+              onPressed: () async{
+                final updatedNote = Note(
+                  id: note.id,
+                  title: titleController.text,
+                  content: contentController.text,
+                  createdAt: note.createdAt,
+                );
+                await DatabaseHelper().updateNote(updatedNote);
+                Navigator.pop(context);
+                _loadNotes();
+              }, 
+              child: const Text('Save'),
+              ),
+          ],
+        );
+      }
+    );
+  }
+
   Future<void> _deleteNote(Note note) async{
     await DatabaseHelper().deleteNote(note.id!);
     _loadNotes();
@@ -71,7 +140,7 @@ class _NotesState extends State<Notes> {
             TextField(
               style: TextStyle(color: textColor),
               decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search, color: textColor),
+                prefixIcon: Icon(Icons.search, color: settings.isDarkmode ? Colors.white : Colors.black),
                 hintText: 'Search Notes...',
                 hintStyle: TextStyle(color: textColor),
                 border: OutlineInputBorder(
@@ -100,17 +169,17 @@ class _NotesState extends State<Notes> {
                       child: Icon(Icons.delete, color: Colors.white),
                     ),
                     child: Card(
-                    color: settings.isDarkmode ? Colors.grey[850] : Colors.grey,
+                    color: settings.isDarkmode ? Colors.black : Colors.white,
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     child: ListTile(
                       title: Text(
                         notes[index].title,
-                        style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+                        style: TextStyle(color: settings.isDarkmode ? Colors.white : Colors.black, fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
                         notes[index].content,
                         style: TextStyle(
-                          color: textColor,
+                          color: settings.isDarkmode ? Colors.white : Colors.black,
                         ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -120,7 +189,9 @@ class _NotesState extends State<Notes> {
                         _deleteNote(note);
                       },
                     ),
-                    onTap: (){},
+                    onTap: (){
+                      _showEditDialog(notes[index]);
+                    },
                     ),
                     )
                   );
@@ -137,8 +208,8 @@ class _NotesState extends State<Notes> {
             _loadNotes();
           }
         },
-        backgroundColor: settings.appBarColor,
-        child: Icon(Icons.add, color: settings.fontColor),
+        backgroundColor: settings.isDarkmode ?Colors.black : Colors.white,
+        child: Icon(Icons.add, color: settings.isDarkmode ? Colors.white : Colors.black),
         ),
     );
   }

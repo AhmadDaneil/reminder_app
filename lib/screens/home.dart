@@ -29,9 +29,13 @@ class _HomeState extends State<Home> {
   }
 
   void _showReminderDialog(Reminder reminder) {
+    final settings = Provider.of<SettingsProvider>(context, listen: false);
+    final isDark = settings.isDarkmode;
+    
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: isDark? Colors.grey[900] : Colors.white,
         title: Text(reminder.title),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -127,27 +131,27 @@ class _HomeState extends State<Home> {
               },
               child: Card(
               elevation: 10.0,
-              color: settings.isDarkmode ? Colors.grey[900] : Colors.white,
+              color: settings.isDarkmode ? Colors.black : Colors.white,
               margin: const EdgeInsets.symmetric(vertical: 8.0),
               child: ListTile(
                 title: Text(
                   reminder.title,
-                  style: TextStyle(color: settings.fontColor, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: settings.isDarkmode ? Colors.white : Colors.black, fontWeight: FontWeight.bold),
                 ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (reminder.content.isNotEmpty)
-                  Text(reminder.content, style: TextStyle(color: settings.fontColor),
+                  Text(reminder.content, style: TextStyle(color: settings.isDarkmode ? Colors.white : Colors.black),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'DateTime: ${reminder.dateTime}',
-                    style: TextStyle(fontSize: 12, color: settings.fontColor),
+                    style: TextStyle(fontSize: 12, color: settings.isDarkmode ? Colors.white : Colors.black),
                   ),
                   Text(
                     'Repeat: ${reminder.repeat}',
-                    style: TextStyle(fontSize: 12, color: settings.fontColor),
+                    style: TextStyle(fontSize: 12, color: settings.isDarkmode ? Colors.white : Colors.black),
                   )
                 ],
               ),
@@ -171,9 +175,9 @@ class _HomeState extends State<Home> {
             _loadReminders();
             }
           },
-          backgroundColor: settings.isDarkmode ?Colors.grey[850] : Colors.grey,
+          backgroundColor: settings.isDarkmode ?Colors.black : Colors.white,
           elevation: 30.0,
-          child: Icon(Icons.add, color: settings.fontColor),
+          child: Icon(Icons.add, color: settings.isDarkmode ? Colors.white : Colors.black),
         ),
 
         drawer: Drawer(
