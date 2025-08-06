@@ -30,6 +30,7 @@ class NotificationApi {
       final fln.AndroidFlutterLocalNotificationsPlugin? androidImplementation =
           _notifications.resolvePlatformSpecificImplementation<
               fln.AndroidFlutterLocalNotificationsPlugin>();
+      print('Android SDK: ${Platform.operatingSystemVersion}');
       
       if (androidImplementation != null) {
         final bool? granted = await androidImplementation.requestNotificationsPermission();
@@ -43,9 +44,28 @@ class NotificationApi {
       }
     }
 
+    if (!kIsWeb && Platform.isIOS) {
+      final fln.IOSFlutterLocalNotificationsPlugin? iosImplementation =
+      _notifications.resolvePlatformSpecificImplementation<
+      fln.IOSFlutterLocalNotificationsPlugin>();
+
+      if(iosImplementation != null) {
+        await iosImplementation.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+      }
+    }
+
 
     final android = fln.AndroidInitializationSettings('@mipmap/ic_launcher');
-    final iOS = fln.DarwinInitializationSettings();
+    final iOS = fln.DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
+
     final settings = fln.InitializationSettings(
       android: android,
       iOS: iOS,

@@ -71,7 +71,7 @@ class SettingsPage extends StatelessWidget {
               ),
               DropdownButtonFormField<String>(
                 value: settings.fontSize,
-                items: ['Small', 'Default', 'Medium', 'Large'].map((e) => DropdownMenuItem(value: e, child: Text(e, style: TextStyle(color: settings.fontColor, fontWeight: FontWeight.bold,
+                items: ['Small', 'Default', 'Medium', 'Large'].map((e) => DropdownMenuItem(value: e, child: Text(e, style: TextStyle(color: settings.fontColor, fontSize: settings.fontSizeValue,fontWeight: FontWeight.bold,
                 ),
                 ),
                 ))
@@ -80,7 +80,8 @@ class SettingsPage extends StatelessWidget {
                   if (val != null) settings.setFontSize(val);
                 },
                 dropdownColor: settings.backgroundColor,
-                style: TextStyle(color: settings.fontColor),
+                style: TextStyle(color: settings.fontColor , fontSize: settings.fontSizeValue,
+                ),
                 decoration: InputDecoration(
                   labelText: 'Font Size',
                   labelStyle: TextStyle(color: settings.fontColor),

@@ -2,7 +2,7 @@ class Reminder{
   final int? id;
   final String title;
   final String content;
-  final String dateTime;
+  final DateTime dateTime;
   final String repeat;
 
   Reminder({
@@ -18,7 +18,7 @@ class Reminder{
       'id' : id,
       'title' : title,
       'content' : content,
-      'dateTime' : dateTime,
+      'dateTime' : dateTime.toIso8601String(),
       'repeat' : repeat,
     };
   } 
@@ -28,7 +28,7 @@ class Reminder{
       id: map['id'],
       title: map['title'],
       content: map['content'],
-      dateTime: map['dateTime'],
+      dateTime: DateTime.parse(map['dateTime']),
       repeat: map['repeat'],
     );
   }

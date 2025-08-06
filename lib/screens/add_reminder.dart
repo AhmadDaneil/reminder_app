@@ -23,7 +23,7 @@ class _AddReminderState extends State<AddReminder> {
     if (reminder != null && _titleController.text.isEmpty) {
       _titleController.text = reminder.title;
       _notesController.text = reminder.content;
-      _selectedDate = DateTime.parse(reminder.dateTime);
+      _selectedDate = reminder.dateTime;
       _selectedTime = TimeOfDay.fromDateTime(_selectedDate!);
       _repeat = reminder.repeat;
     }
@@ -70,7 +70,7 @@ class _AddReminderState extends State<AddReminder> {
     final reminder = Reminder(
       title: _titleController.text,
       content: _notesController.text,
-      dateTime: combinedDateTime.toIso8601String(),
+      dateTime: combinedDateTime,
       repeat: _repeat,
     );
 

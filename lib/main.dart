@@ -7,8 +7,11 @@ import 'package:reminder_app/screens/home.dart';
 import 'package:reminder_app/screens/settings.dart';
 import 'package:reminder_app/services/settings_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:reminder_app/services/notification_api.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await NotificationApi.init(initScheduled: true);
   runApp(
     ChangeNotifierProvider(
     create: (_) => SettingsProvider(),

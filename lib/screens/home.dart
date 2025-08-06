@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:reminder_app/services/settings_provider.dart';
 import 'package:reminder_app/services/reminder_model.dart';
 import 'package:reminder_app/services/database_helper.dart';
+import 'package:reminder_app/services/notification_api.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -44,7 +45,7 @@ class _HomeState extends State<Home> {
             if (reminder.content.isNotEmpty)
             Text('Notes: ${reminder.content}'),
           const SizedBox(height: 8),
-          Text('DateTime: ${reminder.content}'),
+          Text('Date and Time: ${reminder.dateTime}'),
           Text('Repeat: ${reminder.repeat}'),
           ],
           ),
@@ -69,6 +70,32 @@ class _HomeState extends State<Home> {
               }, 
               child: Text('Edit'),
               ),
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+
+                  final reminderTime = reminder.dateTime;
+                  if (reminderTime.isBefore(DateTime.now())) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Scheduled time is in the past. Cannot start.')),
+                    );
+                    return;
+                  }
+
+                  await NotificationApi.showScheduledNotification(
+                    id: reminder.id ?? 0,
+                    title: reminder.title,
+                    body: reminder.content,
+                    payload: 'Reminder ${reminder.id}',
+                    scheduleDate: reminderTime,
+                  );
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Reminder Started and notification scheduled.')),
+                  );
+                }, 
+                child: const Text('Start'),
+                ),
           ],
       )
       );
