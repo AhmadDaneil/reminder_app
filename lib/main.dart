@@ -13,21 +13,28 @@ import 'package:timezone/timezone.dart' as tz;
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationApi.init(initScheduled: true);
-  runApp(
-    ChangeNotifierProvider(
-    create: (_) => SettingsProvider(),
-    child: const MyApp(),
-    )
-  );
-  Future.delayed(Duration(seconds: 5), () {
-  final scheduledTime = tz.TZDateTime.now(tz.local).add(Duration(seconds: 10));  NotificationApi.showScheduledNotification(
+
+  final scheduledTime = tz.TZDateTime.now(tz.local).add(Duration(seconds: 10));
+  await NotificationApi.showNotification(
+  id: 99,
+  title: 'Immediate Test',
+  body: 'If you see this, scheduling is the only issue.',
+);
+
+  NotificationApi.showScheduledNotification(
     id: 1,
     title: 'Test',
     body: 'This is a test notification',
     scheduleDate: scheduledTime,
   );
   print("Scheduled for $scheduledTime");
-});
+
+  runApp(
+    ChangeNotifierProvider(
+    create: (_) => SettingsProvider(),
+    child: const MyApp(),
+    )
+  );
 
 }
 

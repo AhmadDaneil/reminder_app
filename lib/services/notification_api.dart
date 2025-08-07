@@ -136,7 +136,6 @@ class NotificationApi {
       payload: payload,
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation: fln.UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: fln.DateTimeComponents.time,
     );
     print('Scheduling notification at: $scheduleDate');
     } catch (e) {
