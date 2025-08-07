@@ -5,6 +5,8 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:flutter/foundation.dart'; // Import for kIsWeb
+import 'package:android_intent_plus/android_intent.dart';
+
 
 class NotificationApi {
   static final _notifications = fln.FlutterLocalNotificationsPlugin();
@@ -13,9 +15,9 @@ class NotificationApi {
   static Future<fln.NotificationDetails> _notificationDetails() async {
     return fln.NotificationDetails(
       android: fln.AndroidNotificationDetails(
-        'channel id',
-        'channel name',
-        channelDescription: 'channel description',
+        'reminder_channel',
+        'Reminders',
+        channelDescription: 'channel for scheduled reminders',
         importance: fln.Importance.max,
         priority: fln.Priority.high,
       ),
@@ -87,6 +89,16 @@ class NotificationApi {
     }
   }
 
+  Future<void> requestExactAlarmPermission() async {
+  if (Platform.isAndroid && Platform.version.compareTo('12') >= 0) {
+    final AndroidIntent intent = AndroidIntent(
+      action: 'android.settings.REQUEST_SCHEDULE_EXACT_ALARM',
+    );
+    await intent.launch();
+  }
+}
+
+
   @pragma('vm:entry-point')
   static void notificationResponseBackgroundHandler(fln.NotificationResponse notificationResponse) {
     print('Notification action tapped in background: ${notificationResponse.payload}');
@@ -114,6 +126,7 @@ class NotificationApi {
     String? payload,
     required DateTime scheduleDate,
   }) async {
+    try {
     await _notifications.zonedSchedule(
       id,
       title,
@@ -123,8 +136,14 @@ class NotificationApi {
       payload: payload,
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation: fln.UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: fln.DateTimeComponents.time,
     );
+    print('Scheduling notification at: $scheduleDate');
+    } catch (e) {
+      print('Error scheduling notification: $e');
+      }
   }
+  
 
 
 }

@@ -8,6 +8,7 @@ import 'package:reminder_app/screens/settings.dart';
 import 'package:reminder_app/services/settings_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:reminder_app/services/notification_api.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,16 @@ void main() async{
     child: const MyApp(),
     )
   );
+  Future.delayed(Duration(seconds: 5), () {
+  final scheduledTime = tz.TZDateTime.now(tz.local).add(Duration(seconds: 10));  NotificationApi.showScheduledNotification(
+    id: 1,
+    title: 'Test',
+    body: 'This is a test notification',
+    scheduleDate: scheduledTime,
+  );
+  print("Scheduled for $scheduledTime");
+});
+
 }
 
 class MyApp extends StatelessWidget {
